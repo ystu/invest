@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980">
+  <defs>
+    <style>
+      .bg { fill: #f6f7f9; }
+      .panel { fill: #ffffff; stroke: #c9cdd4; stroke-width: 2; rx: 8; }
+      .grid { stroke: #e7e9ee; stroke-width: 1; }
+      .axis { stroke: #b8bec8; stroke-width: 2; }
+      .price { fill: none; stroke: #111827; stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+      .neck { stroke: #2563eb; stroke-width: 3; stroke-dasharray: 10 8; }
+      .stop { stroke: #dc2626; stroke-width: 3; stroke-dasharray: 8 8; }
+      .target { stroke: #16a34a; stroke-width: 3; stroke-dasharray: 8 8; }
+      .entry { fill: #16a34a; stroke: #0f7a35; stroke-width: 2; }
+      .shortEntry { fill: #dc2626; stroke: #991b1b; stroke-width: 2; }
+      .point { fill: #ffffff; stroke: #111827; stroke-width: 3; }
+      .title { font: 700 30px Arial, sans-serif; fill: #111827; }
+      .label { font: 600 19px Arial, sans-serif; fill: #111827; }
+      .small { font: 500 16px Arial, sans-serif; fill: #374151; }
+      .blue { fill: #1d4ed8; }
+      .red { fill: #b91c1c; }
+      .green { fill: #15803d; }
+      .note { font: 500 18px Arial, sans-serif; fill: #4b5563; }
+      .arrow { stroke: #111827; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .greenArrow { stroke: #16a34a; stroke-width: 3; fill: none; marker-end: url(#greenArrow); }
+      .redArrow { stroke: #dc2626; stroke-width: 3; fill: none; marker-end: url(#redArrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#111827"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16a34a"/>
+    </marker>
+    <marker id="redArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="980"/>
+  <text class="title" x="58" y="58">我理解的量價型態結構：不是看圖片像不像，而是拆成轉折點和關鍵價位</text>
+  <text class="note" x="58" y="88">黑線是價格路徑；藍線是頸線/突破線；紅線是型態失效停損；綠線是第一目標區。</text>
+
+  <!-- Panel 1 W bottom -->
+  <rect class="panel" x="50" y="125" width="620" height="365" rx="8"/>
+  <text class="title" x="82" y="172">W 底：多方反轉</text>
+  <g transform="translate(80 205)">
+    <line class="grid" x1="0" y1="50" x2="560" y2="50"/>
+    <line class="grid" x1="0" y1="120" x2="560" y2="120"/>
+    <line class="grid" x1="0" y1="190" x2="560" y2="190"/>
+    <line class="axis" x1="0" y1="250" x2="560" y2="250"/>
+    <path class="price" d="M20,72 L82,120 L135,215 L235,98 L333,205 L418,96 L515,42"/>
+    <line class="neck" x1="215" y1="98" x2="500" y2="98"/>
+    <line class="stop" x1="305" y1="225" x2="448" y2="225"/>
+    <line class="target" x1="408" y1="40" x2="548" y2="40"/>
+    <circle class="point" cx="135" cy="215" r="8"/>
+    <circle class="point" cx="235" cy="98" r="8"/>
+    <circle class="point" cx="333" cy="205" r="8"/>
+    <circle class="entry" cx="418" cy="96" r="9"/>
+    <text class="label" x="116" y="244">A</text>
+    <text class="label" x="226" y="78">B 頸線</text>
+    <text class="label" x="319" y="238">C</text>
+    <text class="small green" x="432" y="90">突破進多</text>
+    <text class="small red" x="322" y="248">跌破 C，型態失效</text>
+    <text class="small green" x="420" y="31">目標 = 頸線 + 高度</text>
+  </g>
+
+  <!-- Panel 2 M top -->
+  <rect class="panel" x="730" y="125" width="620" height="365" rx="8"/>
+  <text class="title" x="762" y="172">M 頭：空方反轉</text>
+  <g transform="translate(760 205)">
+    <line class="grid" x1="0" y1="50" x2="560" y2="50"/>
+    <line class="grid" x1="0" y1="120" x2="560" y2="120"/>
+    <line class="grid" x1="0" y1="190" x2="560" y2="190"/>
+    <line class="axis" x1="0" y1="250" x2="560" y2="250"/>
+    <path class="price" d="M20,210 L90,140 L142,48 L238,166 L338,58 L420,170 L520,230"/>
+    <line class="neck" x1="218" y1="166" x2="500" y2="166"/>
+    <line class="stop" x1="306" y1="36" x2="452" y2="36"/>
+    <line class="target" x1="408" y1="232" x2="548" y2="232"/>
+    <circle class="point" cx="142" cy="48" r="8"/>
+    <circle class="point" cx="238" cy="166" r="8"/>
+    <circle class="point" cx="338" cy="58" r="8"/>
+    <circle class="shortEntry" cx="420" cy="170" r="9"/>
+    <text class="label" x="126" y="34">A</text>
+    <text class="label" x="225" y="194">B 頸線</text>
+    <text class="label" x="326" y="42">C</text>
+    <text class="small red" x="434" y="165">跌破進空</text>
+    <text class="small red" x="320" y="27">站回 C，型態失效</text>
+    <text class="small green" x="416" y="256">目標 = 頸線 - 高度</text>
+  </g>
+
+  <!-- Panel 3 inverse head and shoulders -->
+  <rect class="panel" x="50" y="550" width="620" height="365" rx="8"/>
+  <text class="title" x="82" y="597">頭肩底：多方反轉</text>
+  <g transform="translate(80 630)">
+    <line class="grid" x1="0" y1="50" x2="560" y2="50"/>
+    <line class="grid" x1="0" y1="120" x2="560" y2="120"/>
+    <line class="grid" x1="0" y1="190" x2="560" y2="190"/>
+    <line class="axis" x1="0" y1="250" x2="560" y2="250"/>
+    <path class="price" d="M25,100 L98,185 L172,112 L260,232 L348,120 L420,178 L512,78"/>
+    <line class="neck" x1="155" y1="112" x2="510" y2="84"/>
+    <line class="stop" x1="220" y1="244" x2="320" y2="244"/>
+    <line class="target" x1="418" y1="36" x2="545" y2="36"/>
+    <circle class="point" cx="98" cy="185" r="8"/>
+    <circle class="point" cx="260" cy="232" r="8"/>
+    <circle class="point" cx="420" cy="178" r="8"/>
+    <circle class="entry" cx="512" cy="78" r="9"/>
+    <text class="label" x="70" y="214">左肩</text>
+    <text class="label" x="244" y="263">頭</text>
+    <text class="label" x="392" y="207">右肩</text>
+    <text class="small blue" x="345" y="97">斜頸線</text>
+    <text class="small green" x="426" y="73">突破進多</text>
+    <text class="small red" x="224" y="267">破頭部低點失效</text>
+  </g>
+
+  <!-- Panel 4 N move -->
+  <rect class="panel" x="730" y="550" width="620" height="365" rx="8"/>
+  <text class="title" x="762" y="597">N 字底 / 波段漲幅滿足</text>
+  <g transform="translate(760 630)">
+    <line class="grid" x1="0" y1="50" x2="560" y2="50"/>
+    <line class="grid" x1="0" y1="120" x2="560" y2="120"/>
+    <line class="grid" x1="0" y1="190" x2="560" y2="190"/>
+    <line class="axis" x1="0" y1="250" x2="560" y2="250"/>
+    <path class="price" d="M35,220 L150,92 L258,168 L378,66 L505,30"/>
+    <line class="neck" x1="135" y1="92" x2="410" y2="92"/>
+    <line class="stop" x1="220" y1="188" x2="325" y2="188"/>
+    <line class="target" x1="366" y1="30" x2="535" y2="30"/>
+    <circle class="point" cx="35" cy="220" r="8"/>
+    <circle class="point" cx="150" cy="92" r="8"/>
+    <circle class="point" cx="258" cy="168" r="8"/>
+    <circle class="entry" cx="378" cy="66" r="9"/>
+    <path class="greenArrow" d="M45,236 C95,258 136,145 150,104"/>
+    <path class="greenArrow" d="M270,184 C320,206 362,118 378,78"/>
+    <text class="label" x="18" y="247">A</text>
+    <text class="label" x="138" y="78">B</text>
+    <text class="label" x="246" y="197">C</text>
+    <text class="small blue" x="160" y="116">突破 B 代表第二段啟動</text>
+    <text class="small red" x="223" y="212">跌破 C，結構破壞</text>
+    <text class="small green" x="374" y="24">目標 = C + (B - A)</text>
+  </g>
+</svg>
