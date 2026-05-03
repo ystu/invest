@@ -1,5 +1,8 @@
 # Repository Guidelines
 
+- This workspace contains Chinese Markdown files. When reading them in PowerShell, use UTF-8 explicitly to avoid mojibake:
+  `[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new(); Get-Content -Raw -Encoding UTF8 -LiteralPath 'path'`
+
 這個 repo 是個人財務與投資紀錄，不是單一程式專案。之後在這裡工作時，先尊重資料夾的資金用途與風險邊界，再決定要怎麼整理、分析或新增檔案。
 
 ## 資金分區
