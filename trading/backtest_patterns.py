@@ -641,6 +641,7 @@ def backtest(
     sizing_mode: str,
     position_pct: float,
     fee_bps: float,
+    exit_mode: str,
 ) -> tuple[list[Trade], float]:
     cash = initial_cash
     fee_rate = fee_bps / 10_000
@@ -660,36 +661,112 @@ def backtest(
         exit_price = candles[-1].close
         exit_index = len(candles) - 1
         reason = "end"
+        realized_gross = 0.0
+        exit_notional = 0.0
+        remaining_qty = qty
+        target1_hit = False
+        target_distance = abs(signal.target - signal.entry)
+        target2 = (
+            signal.entry + target_distance * 2
+            if signal.side == "long"
+            else signal.entry - target_distance * 2
+        )
 
         for i in range(signal.index + 1, len(candles)):
             c = candles[i]
             if signal.side == "long":
                 if c.low <= signal.stop:
+                    if target1_hit:
+                        realized_gross += (signal.stop - signal.entry) * remaining_qty
+                        exit_notional += signal.stop * remaining_qty
+                        remaining_qty = 0
+                        reason = "target1_stop"
+                    else:
+                        reason = "stop"
                     exit_price = signal.stop
                     exit_index = i
-                    reason = "stop"
                     break
-                if c.high >= signal.target:
-                    exit_price = signal.target
+                if exit_mode == "two_targets" and not target1_hit and c.high >= signal.target:
+                    half_qty = qty / 2
+                    realized_gross += (signal.target - signal.entry) * half_qty
+                    exit_notional += signal.target * half_qty
+                    remaining_qty -= half_qty
+                    target1_hit = True
+                    if c.high >= target2:
+                        realized_gross += (target2 - signal.entry) * remaining_qty
+                        exit_notional += target2 * remaining_qty
+                        remaining_qty = 0
+                        exit_price = target2
+                        exit_index = i
+                        reason = "target2"
+                        break
+                    continue
+                if c.high >= (target2 if exit_mode == "two_targets" and target1_hit else signal.target):
+                    exit_price = target2 if exit_mode == "two_targets" and target1_hit else signal.target
+                    if exit_mode == "two_targets" and target1_hit:
+                        realized_gross += (exit_price - signal.entry) * remaining_qty
+                        exit_notional += exit_price * remaining_qty
+                        remaining_qty = 0
+                        reason = "target2"
+                    else:
+                        reason = "target"
                     exit_index = i
-                    reason = "target"
                     break
             else:
                 if c.high >= signal.stop:
+                    if target1_hit:
+                        realized_gross += (signal.entry - signal.stop) * remaining_qty
+                        exit_notional += signal.stop * remaining_qty
+                        remaining_qty = 0
+                        reason = "target1_stop"
+                    else:
+                        reason = "stop"
                     exit_price = signal.stop
                     exit_index = i
-                    reason = "stop"
                     break
-                if c.low <= signal.target:
-                    exit_price = signal.target
+                if exit_mode == "two_targets" and not target1_hit and c.low <= signal.target:
+                    half_qty = qty / 2
+                    realized_gross += (signal.entry - signal.target) * half_qty
+                    exit_notional += signal.target * half_qty
+                    remaining_qty -= half_qty
+                    target1_hit = True
+                    if c.low <= target2:
+                        realized_gross += (signal.entry - target2) * remaining_qty
+                        exit_notional += target2 * remaining_qty
+                        remaining_qty = 0
+                        exit_price = target2
+                        exit_index = i
+                        reason = "target2"
+                        break
+                    continue
+                if c.low <= (target2 if exit_mode == "two_targets" and target1_hit else signal.target):
+                    exit_price = target2 if exit_mode == "two_targets" and target1_hit else signal.target
+                    if exit_mode == "two_targets" and target1_hit:
+                        realized_gross += (signal.entry - exit_price) * remaining_qty
+                        exit_notional += exit_price * remaining_qty
+                        remaining_qty = 0
+                        reason = "target2"
+                    else:
+                        reason = "target"
                     exit_index = i
-                    reason = "target"
                     break
 
-        gross = (exit_price - signal.entry) * qty
-        if signal.side == "short":
-            gross *= -1
-        fees = (signal.entry * qty + exit_price * qty) * fee_rate
+        if exit_mode == "two_targets" and target1_hit and remaining_qty > 0 and reason == "end":
+            if signal.side == "long":
+                realized_gross += (exit_price - signal.entry) * remaining_qty
+            else:
+                realized_gross += (signal.entry - exit_price) * remaining_qty
+            exit_notional += exit_price * remaining_qty
+            reason = "target1_end"
+
+        if remaining_qty == qty:
+            gross = (exit_price - signal.entry) * qty
+            if signal.side == "short":
+                gross *= -1
+        else:
+            gross = realized_gross
+        total_exit_notional = exit_notional if remaining_qty < qty else exit_price * qty
+        fees = (signal.entry * qty + total_exit_notional) * fee_rate
         pnl = gross - fees
         cash += pnl
         r_multiple = pnl / (risk_per_unit * qty) if qty else 0
@@ -879,6 +956,22 @@ def main() -> None:
     parser.add_argument("--retest-wait", type=int, default=12)
     parser.add_argument("--retest-tolerance-pct", type=float, default=1.5)
     parser.add_argument("--target-mult", type=float, default=1.0)
+    parser.add_argument(
+        "--patterns",
+        default=None,
+        help="Comma-separated pattern filter, e.g. W_BOTTOM,M_TOP,N_LONG,N_SHORT.",
+    )
+    parser.add_argument(
+        "--sides",
+        default=None,
+        help="Comma-separated side filter, e.g. long,short.",
+    )
+    parser.add_argument(
+        "--exit-mode",
+        choices=["single_target", "two_targets"],
+        default="single_target",
+        help="single_target exits all at the first measured move; two_targets exits half at one measured move and the rest at two measured moves or stop.",
+    )
     parser.add_argument("--chart-bars", type=int, default=700)
     args = parser.parse_args()
 
@@ -924,6 +1017,12 @@ def main() -> None:
         args.retest_wait,
         args.retest_tolerance_pct,
     )
+    if args.patterns:
+        allowed_patterns = {p.strip().upper() for p in args.patterns.split(",") if p.strip()}
+        signals = [s for s in signals if s.pattern in allowed_patterns]
+    if args.sides:
+        allowed_sides = {s.strip().lower() for s in args.sides.split(",") if s.strip()}
+        signals = [s for s in signals if s.side in allowed_sides]
     trades, final_cash = backtest(
         candles,
         signals,
@@ -932,6 +1031,7 @@ def main() -> None:
         args.sizing_mode,
         args.position_pct,
         args.fee_bps,
+        args.exit_mode,
     )
     summary = summarize(trades, args.initial_cash, final_cash)
     write_trades(trades_out, trades)
