@@ -1,0 +1,9 @@
+peak_date,peak_close,trough_date,trough_close,max_drawdown,peak_to_trough_days,trough_to_recovery_days,underwater_days,recovery_date,hit_10pct,hit_15pct,hit_20pct,hit_25pct,hit_30pct,hit_35pct,hit_40pct,hit_50pct
+2000-02-17,10202.2,2001-10-03,3446.26,-0.662204,594,5724,6318,2017-06-05,True,True,True,True,True,True,True,True
+2018-01-23,11253.11,2019-01-04,9382.51,-0.16623,346,291,637,2019-10-22,True,True,False,False,False,False,False,False
+2020-01-14,12179.81,2020-03-19,8681.34,-0.287235,65,112,177,2020-07-09,True,True,True,True,False,False,False,False
+2021-04-27,17595.9,2021-05-17,15353.89,-0.127417,20,43,63,2021-06-29,True,False,False,False,False,False,False,False
+2022-01-04,18526.35,2022-10-25,12666.12,-0.316319,294,478,772,2024-02-15,True,True,True,True,True,False,False,False
+2024-07-11,24390.03,2025-04-09,17391.76,-0.286932,272,131,403,2025-08-18,True,True,True,True,False,False,False,False
+2026-02-26,35414.49,2026-03-31,31722.99,-0.104237,33,10,43,2026-04-10,True,False,False,False,False,False,False,False
+2026-06-22,47741.51,2026-07-30,39933.3,-0.163552,38,,,,True,True,False,False,False,False,False,False
